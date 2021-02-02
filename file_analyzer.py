@@ -54,4 +54,5 @@ def get_code_lines_number(file):
     for line in lines:
         if len(empty_line_regex.findall(line)) == 0:  # line is not empty
             count += 1
+    file.close()
     return count
