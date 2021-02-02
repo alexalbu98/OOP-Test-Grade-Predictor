@@ -2,10 +2,10 @@ import csv
 import pandas as pd
 
 
-def write_to_csv(file, id, project, classes, interfaces, inheritance, polymorphism, diagram):
+def write_to_csv(file, project, nr_of_lines, classes, namespaces, interfaces, inheritance, polymorphism):
     file = open(file, "a")
     writer = csv.writer(file, delimiter="\t")
-    writer.writerow([id, project, classes, interfaces, inheritance, polymorphism, diagram])
+    writer.writerow([project, nr_of_lines, classes, namespaces, interfaces, inheritance, polymorphism])
     file.close()
 
 

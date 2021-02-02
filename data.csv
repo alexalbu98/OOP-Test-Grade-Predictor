@@ -1,2 +1,5 @@
-id	project	lines_of_code	classes	interfaces	inheritance	polymorphism	diagram
-
+project	lines_of_code	classes	namespaces	interfaces	inheritance	polymorphism
+tema2/student_1	3282	50	87	8	22	53
+tema2/student_2	1008	16	5	0	8	16
+tema2/student_3	1046	11	5	3	4	39
+tema2/student_4	2497	33	11	12	10	223
