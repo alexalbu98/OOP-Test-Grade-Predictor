@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from pickle_utils import pickle_object
+from sklearn.model_selection import train_test_split
 
 
 def get_data(data_file):
@@ -11,15 +12,16 @@ def get_data(data_file):
     :return: tuple containing the features and labels
     """
     df = pd.read_csv(data_file, delimiter="\t")
-    features = df[["lines_of_code", "classes", "interfaces", "inheritance", "polymorphism"]]
+    features = df[["lines_of_code", "classes", "inheritance", "polymorphism"]]
     labels = df["grade"].tolist()
     features = np.asarray(features).astype("float32")
     labels = np.asarray(labels).astype("float32").reshape(len(labels), 1)
     return features, labels
 
 
-x_train, y_train = get_data("data.csv")
-x_test, y_test = get_data("test.csv")
+features, labels = get_data("data.csv")
+
+x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.1, shuffle=True)
 
 k = 4  # split into 4 parts
 num_val_samples = len(x_train) // k

@@ -13,7 +13,6 @@ def extract_project_data(project_folder):
     nr_of_lines = 0
     classes = 0
     inheritance = 0
-    interfaces = 0
     poly = 0
     for root, subdirs, files in os.walk(project_folder):
         for file in files:
@@ -22,10 +21,9 @@ def extract_project_data(project_folder):
                 nr_of_lines += get_code_lines_number(path)
                 classes += get_class_number(path)
                 inheritance += get_inheritance_number(path)
-                interfaces += get_interfaces_number(path)
                 poly += get_polymorphism_number(path)
 
-    return [project_folder, nr_of_lines, classes, interfaces, inheritance, poly]
+    return [project_folder, nr_of_lines, classes, inheritance, poly]
 
 
 def get_grades(grades_file):
@@ -61,7 +59,7 @@ def create_dataset(projects_folder, grade_list, csv_file):
                 project_folder = os.path.join(root, subdir)
                 data = extract_project_data(project_folder)
                 data.append(grade)
-                write_to_csv(csv_file, subdir, data[1], data[2], data[3], data[4], data[5], data[6])
+                write_to_csv(csv_file, subdir, data[1], data[2], data[3], data[4], data[5])
             except:
                 print(f"Error analyzing {subdir}")
         break
