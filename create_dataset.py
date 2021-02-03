@@ -61,10 +61,9 @@ def create_dataset(projects_folder, grade_list, csv_file):
                 project_folder = os.path.join(root, subdir)
                 data = extract_project_data(project_folder)
                 data.append(grade)
+                write_to_csv(csv_file, subdir, data[1], data[2], data[3], data[4], data[5], data[6])
             except:
-                print(f"Error for {subdir}")
-                continue
-            write_to_csv(csv_file, subdir, data[1], data[2], data[3], data[4], data[5], data[6])
+                print(f"Error analyzing {subdir}")
         break
 
 

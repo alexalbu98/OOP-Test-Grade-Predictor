@@ -16,13 +16,10 @@ def grade_projects(projects_folder, model):
     grades = {}
     for root, subdirs, files in os.walk(projects_folder):
         for project in subdirs:
-            try:
                 path = os.path.join(root, project)
                 data = analyze_project(path)
                 grade = model.predict(data)
                 grades[project] = float(grade[0])
-            except:
-                print(f"Failed to grade project {project}")
         break
     return grades
 

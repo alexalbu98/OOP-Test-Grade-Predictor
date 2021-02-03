@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from pickle_utils import pickle_object
 
@@ -19,10 +18,8 @@ def get_data(data_file):
     return features, labels
 
 
-features, labels = get_data("data.csv")
-
-# split dataset into training and testing sets
-x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, shuffle=True)
+x_train, y_train = get_data("data.csv")
+x_test, y_test = get_data("test.csv")
 
 k = 4  # split into 4 parts
 num_val_samples = len(x_train) // k
@@ -45,7 +42,7 @@ for i in range(k):
         axis=0)
 
     lr = LinearRegression(normalize=True)
-    lr.fit(x_train, y_train)
+    lr.fit(partial_train_data, partial_train_targets)
     y_pred = lr.predict(x_val)
     rmse = mean_squared_error(y_val, y_pred, squared=False)
     mae = mean_absolute_error(y_val, y_pred)
@@ -54,10 +51,10 @@ for i in range(k):
 
 rmse_mean = np.mean(all_rmse_scores)
 mae_mean = np.mean(all_mae_scores)
-print(f"The MAE score is {mae_mean} and the RMSE score is {rmse_mean} on the evaluation data.")
+print(f"The MAE score is {mae_mean} and the RMSE score is {rmse_mean} on the validation data.")
 
 # test on the test set
-model = LinearRegression()
+model = LinearRegression(normalize=True)
 model.fit(x_train, y_train)
 y_pred = model.predict(x_test)
 rmse = mean_squared_error(y_test, y_pred, squared=False)
