@@ -33,7 +33,7 @@ def get_data(data_file):
     return features, labels
 
 
-features, labels = get_data("data.csv")
+features, labels = get_data("../data.csv")
 
 # split dataset into training and testing sets
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, shuffle=True)

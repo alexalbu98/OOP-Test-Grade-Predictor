@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+from pickle_utils import pickle_object
 
 
 def get_data(data_file):
@@ -27,10 +28,20 @@ features, labels = get_data("data.csv")
 # split dataset into training and testing sets
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, shuffle=True)
 
+# normalize features
+mean = x_train.mean(axis=0)
+std = x_train.std(axis=0)
+
+x_train -= mean
+x_train /= std
+
+x_test -= mean
+x_test /= std
 
 k = 4  # split into 4 parts
 num_val_samples = len(x_train) // k
 all_rmse_scores = []
+all_mae_scores = []
 
 # k_fold validation
 for i in range(k):
@@ -47,11 +58,25 @@ for i in range(k):
          y_train[(i + 1) * num_val_samples:]],
         axis=0)
 
-    lr = LinearRegression(normalize=True)
+    lr = LinearRegression()
     lr.fit(x_train, y_train)
     y_pred = lr.predict(x_val)
     rmse = mean_squared_error(y_val, y_pred, squared=False)
+    mae = mean_absolute_error(y_val, y_pred)
     all_rmse_scores.append(rmse)
+    all_mae_scores.append(mae)
 
-print(np.mean(all_rmse_scores))
+rmse_mean = np.mean(all_rmse_scores)
+mae_mean = np.mean(all_mae_scores)
+print(f"The MAE score is {mae_mean} and the RMSE score is {rmse_mean} on the evaluation data.")
 
+# test on the test set
+model = LinearRegression()
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+rmse = mean_squared_error(y_test, y_pred, squared=False)
+mae = mean_absolute_error(y_test, y_pred)
+print(f"The test MAE is {mae} and test RMSE is {rmse}.")
+
+# save the model
+pickle_object(model, "model.obj")
