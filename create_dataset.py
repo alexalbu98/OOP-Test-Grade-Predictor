@@ -5,6 +5,10 @@ import re
 
 
 def extract_project_data(project_folder):
+    """Extracts the features of a project from a project directory.\n
+    :arg project_folder: The project directory.
+    :return: List containing features
+    """
     file_regex = re.compile(".*(\\.cpp|\\.h)$")
     nr_of_lines = 0
     classes = 0
@@ -25,6 +29,10 @@ def extract_project_data(project_folder):
 
 
 def get_grades(grades_file):
+    """Extracts the grades for each project.\n
+    :arg grades_file: File containing the grades
+    :return: A dictionary containing the project name and grade
+    """
     grades = {}
     file = open(grades_file, mode="r")
     lines = file.readlines()
@@ -42,6 +50,7 @@ def get_grades(grades_file):
 
 
 def create_dataset(projects_folder, grade_list, csv_file):
+    """Creates a dataset from a directory containing all the projects."""
     grades = get_grades(grade_list)
     for root, subdirs, files in os.walk(projects_folder):
         for subdir in subdirs:
@@ -59,4 +68,5 @@ def create_dataset(projects_folder, grade_list, csv_file):
         break
 
 
-create_dataset("train", "labels.txt", "data.csv")
+if __name__ == '__main__':
+    create_dataset("train", "labels.txt", "data.csv")

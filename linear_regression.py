@@ -7,6 +7,10 @@ from pickle_utils import pickle_object
 
 
 def get_data(data_file):
+    """Extracts the labels and data from a csv file.\n
+    :arg data_file: The csv file containing the dataset.
+    :return: tuple containing the features and labels
+    """
     features = []
     df = pd.read_csv(data_file, delimiter="\t")
     lines_of_code = df["lines_of_code"].tolist()
@@ -28,15 +32,6 @@ features, labels = get_data("data.csv")
 # split dataset into training and testing sets
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, shuffle=True)
 
-# normalize features
-mean = x_train.mean(axis=0)
-std = x_train.std(axis=0)
-
-x_train -= mean
-x_train /= std
-
-x_test -= mean
-x_test /= std
 
 k = 4  # split into 4 parts
 num_val_samples = len(x_train) // k
@@ -58,7 +53,7 @@ for i in range(k):
          y_train[(i + 1) * num_val_samples:]],
         axis=0)
 
-    lr = LinearRegression()
+    lr = LinearRegression(normalize=True)
     lr.fit(x_train, y_train)
     y_pred = lr.predict(x_val)
     rmse = mean_squared_error(y_val, y_pred, squared=False)
