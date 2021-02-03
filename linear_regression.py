@@ -11,17 +11,9 @@ def get_data(data_file):
     :arg data_file: The csv file containing the dataset.
     :return: tuple containing the features and labels
     """
-    features = []
     df = pd.read_csv(data_file, delimiter="\t")
-    lines_of_code = df["lines_of_code"].tolist()
-    classes = df["classes"].tolist()
-    interfaces = df["interfaces"].tolist()
-    inheritance = df["inheritance"].tolist()
-    polymorphism = df["polymorphism"].tolist()
+    features = df[["lines_of_code", "classes", "interfaces", "inheritance", "polymorphism"]]
     labels = df["grade"].tolist()
-    for i in range(len(df["project"].tolist())):
-        feature = [lines_of_code[i], classes[i], interfaces[i], inheritance[i], polymorphism[i]]
-        features.append(feature)
     features = np.asarray(features).astype("float32")
     labels = np.asarray(labels).astype("float32").reshape(len(labels), 1)
     return features, labels
@@ -31,7 +23,6 @@ features, labels = get_data("data.csv")
 
 # split dataset into training and testing sets
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, shuffle=True)
-
 
 k = 4  # split into 4 parts
 num_val_samples = len(x_train) // k
@@ -74,4 +65,7 @@ mae = mean_absolute_error(y_test, y_pred)
 print(f"The test MAE is {mae} and test RMSE is {rmse}.")
 
 # save the model
-pickle_object(model, "model.obj")
+save = str(input("Do you want to save?"))
+if save == "yes":
+    print("Saving...")
+    pickle_object(model, "model.obj")
