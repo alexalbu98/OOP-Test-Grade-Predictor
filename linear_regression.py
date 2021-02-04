@@ -1,9 +1,11 @@
 import numpy as np
 import pandas as pd
+from sklearn.decomposition import PCA
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from pickle_utils import pickle_object
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 
 
 def get_data(data_file):
@@ -19,6 +21,19 @@ def get_data(data_file):
     return features, labels
 
 
+def plot_data(file):
+    df = pd.read_csv(file, delimiter="\t")
+    X = df[["lines_of_code", "classes", "inheritance", "polymorphism"]]
+    Y = df["grade"]
+
+    pca = PCA(n_components=1)
+    components = pca.fit_transform(X)
+
+    plt.scatter(components, Y)
+    plt.show()
+
+
+plot_data("data.csv")
 features, labels = get_data("data.csv")
 
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.1, shuffle=True)

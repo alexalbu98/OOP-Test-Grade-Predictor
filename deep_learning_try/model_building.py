@@ -10,7 +10,7 @@ def build_model(input_shape):
     model = models.Sequential()
     model.add(layers.Dense(64, activation='relu',
                            input_shape=(input_shape,)))
-    model.add(layers.Dense(54, activation='relu'))
+    model.add(layers.Dense(64, activation='relu'))
     model.add(layers.Dense(1))
     model.compile(optimizer='adam', loss='mse', metrics=[RootMeanSquaredError()])
 
@@ -18,17 +18,13 @@ def build_model(input_shape):
 
 
 def get_data(data_file):
-    features = []
+    """Extracts the labels and data from a csv file.\n
+    :arg data_file: The csv file containing the dataset.
+    :return: tuple containing the features and labels
+    """
     df = pd.read_csv(data_file, delimiter="\t")
-    lines_of_code = df["lines_of_code"].tolist()
-    classes = df["classes"].tolist()
-    interfaces = df["interfaces"].tolist()
-    inheritance = df["inheritance"].tolist()
-    polymorphism = df["polymorphism"].tolist()
+    features = df[["lines_of_code", "classes", "inheritance", "polymorphism"]]
     labels = df["grade"].tolist()
-    for i in range(len(df["project"].tolist())):
-        feature = [lines_of_code[i], classes[i], interfaces[i], inheritance[i], polymorphism[i]]
-        features.append(feature)
     features = np.asarray(features).astype("float32")
     labels = np.asarray(labels).astype("float32").reshape(len(labels), 1)
     return features, labels
@@ -63,7 +59,7 @@ x_test /= std
 
 k = 4  # split into 4 parts
 num_val_samples = len(x_train) // k
-num_epochs = 500
+num_epochs = 200
 all_scores = []  # all rmse scores
 all_rmse_histories = []
 shape = x_train.shape[-1]
