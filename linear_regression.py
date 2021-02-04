@@ -30,6 +30,8 @@ def plot_data(file):
     components = pca.fit_transform(X)
 
     plt.scatter(components, Y)
+    plt.xlabel("Features")
+    plt.ylabel("Grades")
     plt.show()
 
 
